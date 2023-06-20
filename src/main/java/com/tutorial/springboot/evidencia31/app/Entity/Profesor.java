@@ -1,10 +1,15 @@
 package com.tutorial.springboot.evidencia31.app.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -17,7 +22,11 @@ public class Profesor {
 	@Column(name = "nombres_apellidos")
 	private String nombresApellidos;
 	private String email;
-	private String password;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="user_id")
+	@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
+	private User user;
+	
 	public Long getId() {
 		return id;
 	}
@@ -36,12 +45,13 @@ public class Profesor {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public String getPassword() {
-		return password;
+	public User getUser() {
+		return user;
 	}
-	public void setPassword(String password) {
-		this.password = password;
+	public void setUser(User user) {
+		this.user = user;
 	}
+	
 	
 	
 	
