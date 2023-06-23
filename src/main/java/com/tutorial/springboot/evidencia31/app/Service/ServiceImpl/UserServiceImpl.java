@@ -22,9 +22,11 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public User findByEmail(String username) {
-		User usu = userRepository.findByUsername(username);
-		return usu;
+	public User findByEmail(String email) {
+		// TODO Auto-generated method stub
+		return null;
 	}
+
+	
 	
 }

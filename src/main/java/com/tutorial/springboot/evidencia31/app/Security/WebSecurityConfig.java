@@ -12,11 +12,25 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import lombok.AllArgsConstructor;
 
 @Configuration
+@AllArgsConstructor
 public class WebSecurityConfig {
+	
+	
+	private final UserDetailsService userDetailsService;
+	private final JWTAuthorizationFilter jwtAuthorizationFilter;
+	
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authManager) throws Exception {
+		
+		JWTAuthenticationFilter jwtAuthenticationFilter = new JWTAuthenticationFilter();
+		jwtAuthenticationFilter.setAuthenticationManager(authManager);
+		jwtAuthenticationFilter.setFilterProcessesUrl("/login");
+		
 		return http
 				.csrf().disable()
 				.authorizeHttpRequests()
@@ -28,23 +42,26 @@ public class WebSecurityConfig {
 				.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and()
+				.addFilter(jwtAuthenticationFilter)
+				.addFilterBefore(jwtAuthorizationFilter,UsernamePasswordAuthenticationFilter.class)
 				.build();
 	}
 	
-	@Bean
-	public UserDetailsService userDetailsService() {
-		InMemoryUserDetailsManager manager =  new InMemoryUserDetailsManager();
-		manager.createUser(User.withUsername("admin")
-				.password(passwordEncoder().encode("admin"))
-				.roles()
-				.build());
-		return manager;
-	}
+//	@Bean
+//	public UserDetailsService userDetailsService() {
+//		InMemoryUserDetailsManager manager =  new InMemoryUserDetailsManager();
+//		manager.createUser(User.withUsername("admin")
+//				.password(passwordEncoder().encode("admin"))
+//				.roles()
+//				.build());
+//		return manager;
+//	}
 	
 	@Bean
 	public AuthenticationManager authManager(HttpSecurity http) throws Exception {
 		return http.getSharedObject(AuthenticationManagerBuilder.class)
-				.userDetailsService(userDetailsService())
+//				.userDetailsService(userDetailsService()) se usa cunado se usoo autorizacion simple
+				.userDetailsService(userDetailsService)
 				.passwordEncoder(passwordEncoder())
 				.and()
 				.build();

@@ -10,5 +10,5 @@ import com.tutorial.springboot.evidencia31.app.Entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>{
-	public User findByUsername(String username);
+	public Optional<User> findByOneUsername(String username);
 }
