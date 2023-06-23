@@ -12,7 +12,7 @@ public interface CursoService {
 	public Curso findById(Long id);
 	public Curso create(Curso c);
 	public Curso update(Curso c);
-	public Curso delete(Curso c);
+	public Curso delete(Long id);
 	public List<Curso> findByProfesor(Profesor p);
 
 }

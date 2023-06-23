@@ -47,8 +47,14 @@ public class CursoServiceImpl implements CursoService{
 	}
 
 	@Override
-	public Curso delete(Curso c) {
-		return c;
+	public Curso delete(Long id) {
+		Curso cursoDB = findById(id);
+		if(cursoDB==null) {
+			return null;
+		}
+		cursoDB.setId(id);
+		cursoRepository.deleteById(id);
+		return cursoDB;
 	}
 
 	@Override
